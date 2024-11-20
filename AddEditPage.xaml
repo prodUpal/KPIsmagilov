@@ -98,11 +98,11 @@
                 </Border>
                 <TextBlock Text="Дата рождения"/>
                 <Border BorderThickness="1" BorderBrush="LightGray" CornerRadius="5" Padding="5">
-                    <DatePicker SelectedDate="{Binding YearOfBirth}" Text="{Binding YearOfBirth}" Name="YearOfBirthDPicker" SelectedDateFormat="Long" />
+                    <DatePicker  Text="{Binding YearOfBirth}" Name="YearOfBirthDPicker" SelectedDateFormat="Long" />
                 </Border>
                 <TextBlock Text="Дата вступления в службу"/>
                 <Border BorderThickness="1" BorderBrush="LightGray" CornerRadius="5" Padding="5">
-                    <DatePicker SelectedDate="{Binding YearOfEntryIntoService}" Text="{Binding YearOfEntryIntoService}" SelectedDateChanged="YearOfEntryIntoServiceDPicker_SelectedDateChanged" Name="YearOfEntryIntoServiceDPicker" SelectedDateFormat="Long"/>
+                    <DatePicker Text="{Binding YearOfEntryIntoService}" SelectedDateChanged="YearOfEntryIntoServiceDPicker_SelectedDateChanged" Name="YearOfEntryIntoServiceDPicker" SelectedDateFormat="Long"/>
                 </Border>
                 <TextBlock Text="Выслуга лет" />
                 <Border BorderThickness="1" BorderBrush="LightGray" CornerRadius="5" Padding="5">

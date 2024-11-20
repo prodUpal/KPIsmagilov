@@ -26,33 +26,46 @@ namespace KPIsmagilov
 
         private Personnel currentPersonnel = new Personnel();
         public AddEditPage(Personnel personnel)
-        { 
+        {
             InitializeComponent();
 
             var UnitsTypes = KPIsmagilovEntities.GetContext().Units.Select(p => p.ID_Units).ToList();
+
 
             foreach (var UnitsType in UnitsTypes)
             {
                 UnitsTypeComboBox.Items.Add(UnitsType);
             }
 
-            if(personnel == null) {
+            if (personnel == null) {
                 DeleteButton.Visibility = Visibility.Collapsed;
                 SaveButton.Margin = new Thickness(0);
-                imageSource = new BitmapImage(new Uri("C:\\Users\\prod_upal\\Desktop\\KP\\KPIsmagilov\\Resources\\default_photo.png"));
+                //imageSource = new BitmapImage(new Uri("C:\\Users\\prod_upal\\Desktop\\KP\\KPIsmagilov\\Resources\\default_photo.png"));
             }
             else
             {
                 currentPersonnel = personnel;
-                if(personnel.Photo != null) 
-                    imageSource = new BitmapImage(new Uri(personnel.Photo));
+                YearOfBirthDPicker.SelectedDate = currentPersonnel.YearOfBirth;
+                YearOfEntryIntoServiceDPicker.SelectedDate = currentPersonnel.YearOfEntryIntoService;
+                if (personnel.Photo != null)
+                {
+                    try
+                    {
+                        imageSource = new BitmapImage(new Uri(personnel.Photo));
+                        UserImage.Source = imageSource;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("не удалось загрузить фотографию, либо она отсутствует");
+                    }
+                }
                 else
                 {
                     MessageBox.Show("не удалось загрузить фотографию, либо она отсутствует");
-                    imageSource = new BitmapImage(new Uri("C:\\Users\\prod_upal\\Desktop\\KP\\KPIsmagilov\\Resources\\default_photo.png"));
+                    //imageSource = new BitmapImage(new Uri("C:\\Users\\prod_upal\\Desktop\\KP\\KPIsmagilov\\Resources\\default_photo.png"));
                 }
             }
-            UserImage.Source = imageSource;
+
             DataContext = currentPersonnel;
         }
 
@@ -85,9 +98,11 @@ namespace KPIsmagilov
             DateTime date2 = (DateTime)YearOfBirthDPicker.SelectedDate;
             DateTime date1 = (DateTime)YearOfEntryIntoServiceDPicker.SelectedDate;
             int res = (int)date1.Year - date2.Year;
-                        
+
             StringBuilder errors = new StringBuilder();
-            if (currentPersonnel.ID_Units == null)
+            if (string.IsNullOrWhiteSpace(PhotoTBox.Text))
+                errors.AppendLine("Добавьте фотографию военнослужащего");
+            if (UnitsTypeComboBox.SelectedItem == null)
                 errors.AppendLine("Укажите ID части");
             if (string.IsNullOrWhiteSpace(currentPersonnel.Surname))
                 errors.AppendLine("Укажите фамилию военнослужащего");
@@ -97,18 +112,27 @@ namespace KPIsmagilov
                 errors.AppendLine("Укажите отчество военнослужащего");
             if (string.IsNullOrWhiteSpace(currentPersonnel.Position))
                 errors.AppendLine("Укажите звание военнослужащего");
-            if (YearOfBirthDPicker.SelectedDate == new DateTime(1,1,1))
-                errors.AppendLine("Укажите год рождения военнослужащего");
+            if (YearOfBirthDPicker.SelectedDate == new DateTime(1, 1, 1))
+                errors.AppendLine("Укажите дату рождения военнослужащего");
             if (YearOfEntryIntoServiceDPicker.SelectedDate == new DateTime(1, 1, 1))
-                errors.AppendLine("Укажите год вступления в службу военнослужащего");
+                errors.AppendLine("Укажите дату вступления в службу военнослужащего");
             if (currentPersonnel.LengthOfService == 0)
                 errors.AppendLine("Укажите выслугу лет военнослужащего");
-            if (YearOfBirthDPicker.SelectedDate > YearOfEntryIntoServiceDPicker.SelectedDate && 
-                !(YearOfBirthDPicker.SelectedDate == new DateTime(1, 1, 1) && YearOfEntryIntoServiceDPicker.SelectedDate == new DateTime(1, 1, 1))) 
-                errors.AppendLine("Год рождения военнослужащего не может быть позднее года вступления в службу");
-            else if (res < 18 &&
+            if (YearOfBirthDPicker.SelectedDate > DateTime.Now)
+            {
+                errors.AppendLine("Дата рождения военнослужащего не может быть позднее текущей даты");
+            }
+            else if (YearOfBirthDPicker.SelectedDate > YearOfEntryIntoServiceDPicker.SelectedDate &&
                 !(YearOfBirthDPicker.SelectedDate == new DateTime(1, 1, 1) && YearOfEntryIntoServiceDPicker.SelectedDate == new DateTime(1, 1, 1)))
+                errors.AppendLine("дата рождения военнослужащего не может быть позднее года вступления в службу");
+             if (YearOfEntryIntoServiceDPicker.SelectedDate > DateTime.Now)
+            {
+                errors.AppendLine("Дата вступления в службу военнослужащего не может быть позднее текущей даты");
+            } 
+            else if (res < 18 &&
+                !(YearOfBirthDPicker.SelectedDate == new DateTime(1, 1, 1) || YearOfEntryIntoServiceDPicker.SelectedDate == new DateTime(1, 1, 1)))
                 errors.AppendLine("Вступление на службу моложе 18 лет невозможно");
+           
 
             currentPersonnel.YearOfBirth = date2;
             currentPersonnel.YearOfEntryIntoService = date1;
