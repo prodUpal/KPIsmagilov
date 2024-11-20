@@ -35,12 +35,13 @@ namespace KPIsmagilov
         {
             var currentPersonnel = KPIsmagilovEntities.GetContext().Personnel.ToList();
 
-            currentPersonnel = currentPersonnel.Where(p => p.Surname.ToLower().Contains(TBSearch.Text.ToLower()) || 
-                                                        p.Name.ToLower().Contains(TBSearch.Text.ToLower()) || 
-                                                        p.Patronymic.ToLower().Contains(TBSearch.Text.ToLower()) || 
-                                                        p.Position.ToLower().Contains(TBSearch.Text.ToLower()) || 
-                                                        (p.LengthOfService).ToString().ToLower().Contains(TBSearch.Text.ToLower()) || 
-                                                        (p.YearOfBirth).ToString().ToLower().Contains(TBSearch.Text.ToLower())||
+            currentPersonnel = currentPersonnel.Where(p => p.Surname.ToLower().Contains(TBSearch.Text.ToLower()) ||
+                                                        p.Name.ToLower().Contains(TBSearch.Text.ToLower()) ||
+                                                        p.Patronymic.ToLower().Contains(TBSearch.Text.ToLower()) ||
+                                                        p.Position.ToLower().Contains(TBSearch.Text.ToLower()) ||
+                                                        p.PersonnelAwardsDisplay.ToLower().Contains(TBSearch.Text.ToLower()) ||
+                                                        (p.LengthOfService).ToString().ToLower().Contains(TBSearch.Text.ToLower()) ||
+                                                        (p.YearOfBirth).ToString().ToLower().Contains(TBSearch.Text.ToLower()) ||
                                                         (p.YearOfEntryIntoService).ToString().ToLower().Contains(TBSearch.Text.ToLower())).ToList();
 
             if (SortCombo.SelectedIndex == 0)
